@@ -29,3 +29,12 @@ https://data.cityofnewyork.us/Social-Services/311-Loud-Music-Party-Complaints/ed
 http://millionsongdataset.com/musixmatch/
 http://millionsongdataset.com/tasteprofile/
 http://millionsongdataset.com/thisismyjam/
+
+
+
+api key
+
+app name: griffintalan
+api key: 6bb7f55c691d1bdff841fdc67934b3b8
+shared secret: e885c7b36560bb6cf42422e9394065b4
+registered to: griffintalan8	
