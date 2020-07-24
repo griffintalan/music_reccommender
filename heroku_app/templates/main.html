@@ -1,0 +1,50 @@
+<!doctype html>
+<html>
+<style>
+html {
+  background-color: #475273;
+}
+.menu li {
+    background-color: darkgrey;
+    padding: 20px;
+    margin: 15px;
+    border: 3px solid white;
+    border-radius: 5px;
+    font-size: 30px;
+}
+.logo {
+  text-align: center;
+  margin: auto;
+  width: 70%;
+  padding-bottom: 20px;
+  color: white;
+  text-shadow: 3px 3px black;
+}
+ul {
+  list-style-type: none;
+  justify-content: center;
+  display: flex;
+}
+a {
+  color: black;
+  text-decoration: none;
+  text-shadow: 2px 2px white;
+}
+h1 {
+  font-size: 50px;
+}
+</style>
+<head>
+<title class="title">Sentiment / Subjectivity Analyzer</title>
+</head>
+<div class="container">
+  <h1 class="logo">Sentiment / Subjectivity Analyzer</h1>
+  <strong><nav>
+    <ul class="menu">
+      <li><a href="{{ url_for('main_sent') }}">Sentiment</a></li>
+      <li><a href="{{ url_for('main_subj') }}">Subjectivity</a></li>
+    </ul>
+  </nav></strong>
+  </h1>
+</div>
+</html>
