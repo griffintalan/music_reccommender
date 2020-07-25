@@ -5,41 +5,61 @@
     <title></title>
   </head>
   <body>
+    <form action="" method="post">
+      <input type="submit" name="Return to Search" value="Return to Search" />
+    </form>
     <div class="">
       Artist:
       {{ result_artist }}
     </div>
+    <br>
     <div class="">
       Listeners:
       {{ listeners }}
     </div>
+    <br>
     <div class="">
       Playcount:
       {{ playcount }}
     </div>
+    <br>
     <div class="">
       Artist Information:
-      {{ artist_info }}
+      {{ artist_info | safe }}
     </div>
+    <br>
     <div class="">
       Track Duration:
       {{ track_duration }}
     </div>
+    <br>
     <div class="">
       Track Listeners:
       {{ track_listeners }}
     </div>
+    <br>
     <div class="">
       Track Playcount:
       {{ track_playcounts }}
     </div>
+    <br>
     <div class="">
       Album:
       {{ track_album }}
     </div>
+    <br>
     <div class="">
       Track Information:
-      {{ track_content }}
+      {{ track_content | safe }}
+    </div>
+    <br>
+    <div style="width: 100%">
+      <img src= {{ image1_url }} id = "image1" alt ="image1"  width="1000" height="600">
+    </div>
+    <br>
+    <br>
+    <div>
+      <img src= {{ image2_url }} id = "image2" alt="image2" width="1000" height="600">
     </div>
   </body>
 </html>

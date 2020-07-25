@@ -1,13 +1,19 @@
-import flask
+from flask import Flask, render_template, request, redirect, url_for, session
 import numpy as np
 import pandas as pd
 import requests
 import time
 import matplotlib.pyplot as plt
+import secrets
+import random
+
+secret = secrets.token_urlsafe(32)
 
 api_key = "6bb7f55c691d1bdff841fdc67934b3b8"
 
-app = flask.Flask(__name__, template_folder='templates')
+app = Flask(__name__, template_folder='templates')
+
+app.secret_key = secret
 
 def find_song(artist, track):
     results = []
@@ -51,7 +57,10 @@ def get_artist_info(result_artist):
     "api_key" : api_key
 }
     artist_info = requests.get('http://ws.audioscrobbler.com/2.0/', params=params_artist_info)
-    content = artist_info.json()['artist']['bio']['content']
+    try:
+        content = artist_info.json()['artist']['bio']['content']
+    except:
+        content = 'No artist information found.'
     listeners = int(artist_info.json()['artist']['stats']['listeners'])
     playcount = int(artist_info.json()['artist']['stats']['playcount'])
     return (listeners, playcount, content)
@@ -137,22 +146,37 @@ def get_similar_artists(result_artist):
     return df_sim_artists
 
 
-
-
 @app.route('/', methods = ['GET', 'POST'])
 def main():
-    if flask.request.method == 'GET':
-        return flask.render_template('main.html')
-    if flask.request.method == 'POST':
-        artist = [flask.request.form['artist']]
-        track = [flask.request.form['track']]
+    if request.method == 'GET':
+        return render_template('main.html')
+    if request.method == 'POST':
+        session['artist'] = request.form['artist']
+        session['track'] = request.form['track']
+        return redirect(url_for("result"))
+
+@app.route('/not_found', methods = ['GET', 'POST'])
+def not_found():
+    if request.method == 'GET':
+        return render_template('not_found.html')
+    if request.method == 'POST':
+        return redirect(url_for("main"))
+
+@app.route('/result', methods = ['GET', 'POST'])
+def result():
+    if request.method == 'POST':
+        return redirect(url_for("main"))
+
+    if request.method == 'GET':
+        artist = session.get('artist', None)
+        track = session.get('track', None)
 
         try:
             results = find_song(artist = artist, track = track)
             result_artist = results[0][0]
             result_track = results[0][1]
         except:
-            return flask.render_template('not_found.html')
+            return redirect(url_for("not_found"))
 
         listeners, playcount, artist_info = get_artist_info(result_artist)
 
@@ -160,7 +184,32 @@ def main():
 
         sim_tracks_df = get_similar_tracks(result_artist, result_track)
 
-        return flask.render_template('result.html',
+        plt.figure(figsize = (16, 9))
+        plt.plot(sim_tracks_df['Info'], sim_tracks_df['Duration'], label = 'Duration')
+        plt.plot(sim_tracks_df['Info'], sim_tracks_df['Listeners'], label = 'Listeners')
+        plt.plot(sim_tracks_df['Info'], sim_tracks_df['Playcount'], label = 'Playcount')
+        plt.xticks(rotation = 45)
+        plt.ticklabel_format(style='plain', axis='y')
+        plt.ylabel('Count')
+        plt.legend()
+        plt.tight_layout()
+        plt.savefig('static/test.png')
+
+        sim_art_df = get_similar_artists(result_artist)
+
+        plt.figure(figsize = (16, 9))
+        plt.plot(sim_art_df['Info'], sim_art_df['Listeners'], label = 'Listeners')
+        plt.plot(sim_art_df['Info'], sim_art_df['Playcount'], label = 'Playcount')
+        plt.xticks(rotation = 60)
+        plt.ticklabel_format(style='plain', axis='y')
+        plt.legend()
+        plt.tight_layout()
+        plt.savefig('static/test2.png')
+
+        image1_url = 'static/test.png' + '?' + str(random.randint(1, 10000))
+        image2_url = 'static/test2.png' + '?' + str(random.randint(1, 10000))
+
+        return render_template('result.html',
                                      result_artist = result_artist,
                                      result_track = result_track,
                                      listeners = listeners,
@@ -170,8 +219,10 @@ def main():
                                      track_listeners = track_listeners,
                                      track_playcounts = track_playcounts,
                                      track_album = track_album,
-                                     track_content = track_content
-                                     )
+                                     track_content = track_content,
+                                     image1_url = image1_url,
+                                     image2_url = image2_url)
+
 
 
 
