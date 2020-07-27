@@ -1,0 +1,78 @@
+body {
+  background-image: url("../img/tapes.jpg");
+  background-attachment: fixed;
+  color: white;
+}
+
+.main_title {
+  font-size: 60px;
+  color: white;
+}
+
+.subtitle {
+  font-size: 40px;
+  color: white;
+}
+
+.attribution {
+  font-size: 25px;
+  color: white;
+  line-height: 40px;
+}
+
+.legend {
+  font-size: 20px;
+  color: white;
+  text-align: center;
+  font-weight: bold;
+}
+
+
+.entry {
+  color: white;
+  font-weight: bold;
+}
+
+.artist {
+  text-align: center;
+  font-size: 20px;
+}
+
+.track {
+  text-align: center;
+  font-size: 20px;
+}
+
+.form {
+  background-color: rgba(0, 0, 0, .6);
+  border: 2px solid white;
+  border-radius:7px;
+}
+
+.entry {
+  border: 1px solid white;
+  margin-bottom: 13px;
+  border-radius:7px;
+}
+
+.submit {
+  text-align: center;
+}
+
+.submit_button {
+  background-color: white;
+  font-weight: bold;
+  border: none;
+  border-radius: 5px;
+  color: rgba(0, 0, 0, .85);
+}
+
+.art_input {
+  border-radius: 10px;
+  border: none;
+}
+
+.track_input {
+  border-radius: 10px;
+  border: none;
+}

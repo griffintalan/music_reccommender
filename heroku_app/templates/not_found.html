@@ -1,15 +1,40 @@
-<<!DOCTYPE html>
-<html lang="en" dir="ltr">
+<!doctype html>
+<html>
   <head>
     <meta charset="utf-8">
-    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <link rel="stylesheet" href="../static/css/main.css">
+    <title>Music Recommender</title>
   </head>
   <body>
-    <form action="" method="post">
-      <input type="submit" name="Return to Search" value="Return to Search" />
+    <h1 class="main_title">Music Recommender</h1>
+    <h2 class="subtitle">Powered by Last.fm</h2>
+    <h3 class="attribution">Created by Griffin Talan</h3>
+      <br><br><br><br>
+    <form class="form container justify-content-center" action="{{ url_for('main') }}" method="POST">
+        <fieldset class="entry container justify-content-center">
+            <legend class="legend">The song you are looking for wasn't find. Please search again.</legend>
+            <br>
+            <div class="artist container">
+              Artist:<br>
+              <input class="art_input" id="artist" name="artist" type="text" required>
+            </div>
+            <br>
+            <div class="track container">
+              Track:<br>
+              <input class="track_input" id="track" name="track" type="text" required>
+            </div>
+            <br>
+            <br>
+            <div class="submit">
+              <input class="submit_button" type="submit">
+            </div>
+            <br>
+        </fieldset>
     </form>
-    <div class="">
-      Not Found
-    </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
   </body>
 </html>

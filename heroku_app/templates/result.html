@@ -1,65 +1,73 @@
-<!DOCTYPE html>
-<html lang="en" dir="ltr">
+<!doctype html>
+<html>
   <head>
     <meta charset="utf-8">
-    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <link rel="stylesheet" href="../static/css/main.css">
+    <title>Music Recommender</title>
   </head>
   <body>
-    <form action="" method="post">
-      <input type="submit" name="Return to Search" value="Return to Search" />
-    </form>
-    <div class="">
-      Artist:
-      {{ result_artist }}
+    <div class="row">
+      <div class="col-sm-10">
+        <h1 class="main_title">{{ result_artist }}</h1>
+        <h2 class="subtitle">{{ result_track }}</h2>
+        <h3 class="attribution">{{ track_album }}</h3>
+      </div>
+      <div class="col-sm-2">
+        <br>
+        <form method="POST">
+          <input class="submit_button" type="submit" value="Return to Search">
+        </form>
+      </div>
     </div>
-    <br>
-    <div class="">
-      Listeners:
-      {{ listeners }}
+      <br><br>
+    <div class="row" style = "text-align: center; font-size: 20px; font-weight: bold; color: white; background-color: rgba(0, 0, 0, .75); margin: 5px auto;">
+      <div class="col-sm-3">
+        Artist Listeners: <br>
+        {{ listeners }}
+      </div>
+      <div class="col-sm-3">
+        Artist Playcount: <br>
+        {{ playcount }}
+      </div>
+      <div class="col-sm-3">
+        Track Listeners: <br>
+        {{ track_listeners }}
+      </div>
+      <div class="col-sm-3">
+        Track Playcount: <br>
+        {{ track_playcounts }}
+      </div>
     </div>
-    <br>
-    <div class="">
-      Playcount:
-      {{ playcount }}
+    <br><br>
+    <div class="row">
+      <div class="col-sm-6" style = "text-align: center; font-size: 20px; font-weight: bold; color: white; background-color: rgba(0, 0, 0, .75); margin: 5px auto;">
+        Similar Tracks
+        <img src= {{ image1_url }} id = "image1" alt ="image1"  width="100%">
+      </div>
+      <div class="col-sm-6" style = "text-align: center; font-size: 20px; font-weight: bold; color: white; background-color: rgba(0, 0, 0, .75); margin: 5px auto;">
+        Similar Artists
+        <img src= {{ image2_url }} id = "image2" alt="image2" width="100%">
+      </div>
     </div>
-    <br>
-    <div class="">
-      Artist Information:
-      {{ artist_info | safe }}
+    <br><br><br>
+    <div class="row">
+      <div class="col-sm-6">
+        <div class="container" style="color: white; background-color: rgba(0, 0, 0, .75); border-radius: 2px; padding: 1px; height: 100%">
+          <span style = "font-size: 20px">Artist Information</span><br>
+          {{ artist_info | safe }}
+        </div>
+      </div>
+      <div class="col-sm-6">
+        <div class="container" style="color: white; background-color: rgba(0, 0, 0, .75); border-radius: 2px; padding: 1px; height: 100%">
+          <span style = "font-size: 20px">Track Information</span><br>
+          {{ track_content | safe }}
+        </div>
+      </div>
     </div>
-    <br>
-    <div class="">
-      Track Duration:
-      {{ track_duration }}
-    </div>
-    <br>
-    <div class="">
-      Track Listeners:
-      {{ track_listeners }}
-    </div>
-    <br>
-    <div class="">
-      Track Playcount:
-      {{ track_playcounts }}
-    </div>
-    <br>
-    <div class="">
-      Album:
-      {{ track_album }}
-    </div>
-    <br>
-    <div class="">
-      Track Information:
-      {{ track_content | safe }}
-    </div>
-    <br>
-    <div style="width: 100%">
-      <img src= {{ image1_url }} id = "image1" alt ="image1"  width="1000" height="600">
-    </div>
-    <br>
-    <br>
-    <div>
-      <img src= {{ image2_url }} id = "image2" alt="image2" width="1000" height="600">
-    </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
   </body>
 </html>

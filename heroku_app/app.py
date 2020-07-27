@@ -2,7 +2,6 @@ from flask import Flask, render_template, request, redirect, url_for, session
 import numpy as np
 import pandas as pd
 import requests
-import time
 import matplotlib.pyplot as plt
 import secrets
 import random
@@ -160,7 +159,9 @@ def not_found():
     if request.method == 'GET':
         return render_template('not_found.html')
     if request.method == 'POST':
-        return redirect(url_for("main"))
+        session['artist'] = request.form['artist']
+        session['track'] = request.form['track']
+        return redirect(url_for("result"))
 
 @app.route('/result', methods = ['GET', 'POST'])
 def result():
@@ -184,30 +185,32 @@ def result():
 
         sim_tracks_df = get_similar_tracks(result_artist, result_track)
 
-        plt.figure(figsize = (16, 9))
-        plt.plot(sim_tracks_df['Info'], sim_tracks_df['Duration'], label = 'Duration')
-        plt.plot(sim_tracks_df['Info'], sim_tracks_df['Listeners'], label = 'Listeners')
-        plt.plot(sim_tracks_df['Info'], sim_tracks_df['Playcount'], label = 'Playcount')
-        plt.xticks(rotation = 45)
-        plt.ticklabel_format(style='plain', axis='y')
-        plt.ylabel('Count')
+        fig, ax = plt.subplots(figsize=(16, 9))
+        ax1 = ax.bar(sim_tracks_df['Info'], sim_tracks_df['Playcount'], label = 'Playcount', color = 'black')
+        ax2 = ax.bar(sim_tracks_df['Info'], sim_tracks_df['Listeners'], label = 'Listeners', color = 'white')
+        ax.ticklabel_format(style='plain', axis='y')
+        ax.set_facecolor((.5, .5, .5))
+        plt.setp(ax.xaxis.get_majorticklabels(), rotation=70)
+        plt.yticks(color = 'white', fontsize = 15)
+        plt.xticks(color = 'white', fontsize = 15)
         plt.legend()
-        plt.tight_layout()
-        plt.savefig('static/test.png')
+        fig.savefig('static/sim_tracks.png', facecolor = (.1, .1, .1), bbox_inches = "tight")
 
         sim_art_df = get_similar_artists(result_artist)
 
-        plt.figure(figsize = (16, 9))
-        plt.plot(sim_art_df['Info'], sim_art_df['Listeners'], label = 'Listeners')
-        plt.plot(sim_art_df['Info'], sim_art_df['Playcount'], label = 'Playcount')
-        plt.xticks(rotation = 60)
-        plt.ticklabel_format(style='plain', axis='y')
+        fig, ax = plt.subplots(figsize=(16, 9))
+        ax1 = ax.bar(sim_art_df['Info'], sim_tracks_df['Playcount'], label = 'Playcount', color = 'black')
+        ax2 = ax.bar(sim_art_df['Info'], sim_tracks_df['Listeners'], label = 'Listeners', color = 'white')
+        ax.ticklabel_format(style='plain', axis='y')
+        ax.set_facecolor((.5, .5, .5))
+        plt.setp(ax.xaxis.get_majorticklabels(), rotation=70)
+        plt.yticks(color = 'white', fontsize = 15)
+        plt.xticks(color = 'white', fontsize = 15)
         plt.legend()
-        plt.tight_layout()
-        plt.savefig('static/test2.png')
+        fig.savefig('static/sim_artists.png', facecolor = (.1, .1, .1), bbox_inches = "tight")
 
-        image1_url = 'static/test.png' + '?' + str(random.randint(1, 10000))
-        image2_url = 'static/test2.png' + '?' + str(random.randint(1, 10000))
+        image1_url = 'static/sim_tracks.png' + '?' + str(random.randint(1, 10000))
+        image2_url = 'static/sim_artists.png' + '?' + str(random.randint(1, 10000))
 
         return render_template('result.html',
                                      result_artist = result_artist,
