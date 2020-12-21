@@ -1,2 +1,2 @@
 # music_reccommender
-music reccommender system using LastFM API
+Music Reccommender System using LastFM API

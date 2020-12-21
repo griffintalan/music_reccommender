@@ -7,8 +7,10 @@ import secrets
 import random
 
 secret = secrets.token_urlsafe(32)
+header = {'User-Agent' : 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.89 Safari/537.36'}
 
-api_key = "6bb7f55c691d1bdff841fdc67934b3b8"
+
+api_key = ""
 
 app = Flask(__name__, template_folder='templates')
 
@@ -20,31 +22,33 @@ def find_song(artist, track):
     params_get_artists = {
         "method" : "artist.search",
         "format" : "json",
-        "limit" : 100,
+        "limit" : 250,
         "artist" : artist,
         "api_key" : api_key
     }
-    artists = requests.get('http://ws.audioscrobbler.com/2.0/', params=params_get_artists)
+    artists = requests.get('https://ws.audioscrobbler.com/2.0/', params=params_get_artists, headers = header)
     for artist in artists.json()['results']['artistmatches']['artist']:
-            artists_list.append(artist['name'])
+        artists_list.append(artist['name'])
 
     tracks_list = []
     params_get_tracks = {
         "method" : "track.search",
         "format" : "json",
-        "limit" : 100,
+        "limit" : 250,
         "track" : track,
         "api_key" : api_key
     }
-    tracks = requests.get('http://ws.audioscrobbler.com/2.0/', params=params_get_tracks)
+    tracks = requests.get('https://ws.audioscrobbler.com/2.0/', params=params_get_tracks, headers = header)
+
     for track in tracks.json()['results']['trackmatches']['track']:
         if track['artist'] in artists_list:
             return_track = track['name']
             return_artist = track['artist']
             results.append((return_artist, return_track))
-    if len(results) > 0:
-        return results
-    return('Could not find track. Please search again.')
+
+    return results
+
+
 
 
 
@@ -55,7 +59,7 @@ def get_artist_info(result_artist):
     "artist" : result_artist,
     "api_key" : api_key
 }
-    artist_info = requests.get('http://ws.audioscrobbler.com/2.0/', params=params_artist_info)
+    artist_info = requests.get('https://ws.audioscrobbler.com/2.0/', params=params_artist_info, headers = header)
     try:
         content = artist_info.json()['artist']['bio']['content']
     except:
@@ -72,7 +76,7 @@ def get_track_info(result_artist, result_track):
     "track" : result_track,
     "api_key" : api_key
 }
-    track_info = requests.get('http://ws.audioscrobbler.com/2.0/', params=params_track_info)
+    track_info = requests.get('https://ws.audioscrobbler.com/2.0/', params=params_track_info, headers = header)
     track_listeners = int(track_info.json()['track']['listeners'])
     track_playcounts = int(track_info.json()['track']['playcount'])
     track_duration = int(track_info.json()['track']['duration'])
@@ -96,7 +100,7 @@ def get_similar_tracks(result_artist, result_track):
         "api_key" : api_key
     }
     df = pd.DataFrame(columns = ['Info', 'Album', 'Duration', 'Listeners', 'Playcount'])
-    similar_tracks = requests.get('http://ws.audioscrobbler.com/2.0/', params=params_get_similar_tracks)
+    similar_tracks = requests.get('https://ws.audioscrobbler.com/2.0/', params=params_get_similar_tracks, headers = header)
     counter = 1
     for sim_track in similar_tracks.json()['similartracks']['track'][:10]:
         return_similar_track = sim_track['name']
@@ -119,7 +123,7 @@ def get_artist_counts(result_artist):
     "artist" : result_artist,
     "api_key" : api_key
 }
-    artist_info = requests.get('http://ws.audioscrobbler.com/2.0/', params=params_artist_counts)
+    artist_info = requests.get('https://ws.audioscrobbler.com/2.0/', params=params_artist_counts, headers = header)
     listeners = int(artist_info.json()['artist']['stats']['listeners'])
     playcount = int(artist_info.json()['artist']['stats']['playcount'])
     return (listeners, playcount)
@@ -131,7 +135,7 @@ def get_similar_artists(result_artist):
         "artist" : result_artist,
         "api_key" : api_key
     }
-    similar_artists = requests.get('http://ws.audioscrobbler.com/2.0/', params=params_get_similar_artists)
+    similar_artists = requests.get('https://ws.audioscrobbler.com/2.0/', params=params_get_similar_artists, headers = header)
     df_sim_artists = pd.DataFrame(columns = ['Info', 'Listeners', 'Playcount'])
     counter = 1
     for artist in similar_artists.json()['similarartists']['artist'][:10]:
@@ -172,11 +176,12 @@ def result():
         artist = session.get('artist', None)
         track = session.get('track', None)
 
-        try:
-            results = find_song(artist = artist, track = track)
+
+        results = find_song(artist = artist, track = track)
+        if len(results) > 0:
             result_artist = results[0][0]
             result_track = results[0][1]
-        except:
+        else:
             return redirect(url_for("not_found"))
 
         listeners, playcount, artist_info = get_artist_info(result_artist)
@@ -199,8 +204,8 @@ def result():
         sim_art_df = get_similar_artists(result_artist)
 
         fig, ax = plt.subplots(figsize=(16, 9))
-        ax1 = ax.bar(sim_art_df['Info'], sim_tracks_df['Playcount'], label = 'Playcount', color = 'black')
-        ax2 = ax.bar(sim_art_df['Info'], sim_tracks_df['Listeners'], label = 'Listeners', color = 'white')
+        ax1 = ax.bar(sim_art_df['Info'], sim_art_df['Playcount'], label = 'Playcount', color = 'black')
+        ax2 = ax.bar(sim_art_df['Info'], sim_art_df['Listeners'], label = 'Listeners', color = 'white')
         ax.ticklabel_format(style='plain', axis='y')
         ax.set_facecolor((.5, .5, .5))
         plt.setp(ax.xaxis.get_majorticklabels(), rotation=70)
